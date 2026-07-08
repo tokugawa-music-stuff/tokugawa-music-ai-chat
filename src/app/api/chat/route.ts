@@ -30,7 +30,7 @@ ${knowledgeData}
 `;
 
     // 3. config の中に systemInstruction を入れて呼び出す
-   const response = await ai.models.generateContent({
+ const response = await ai.models.generateContent({
   model: "gemini-2.5-flash",
   contents: message,
   config: {
@@ -38,15 +38,13 @@ ${knowledgeData}
   },
 });
 
-console.log("Gemini response:", response);
-console.log("response.text:", response.text);
-console.log("typeof response.text:", typeof response.text);
+console.log("========== GEMINI RESPONSE ==========");
+console.log(response);
+console.log("response.text =", response.text);
+console.log("typeof response.text =", typeof response.text);
 
 return NextResponse.json({
-  reply:
-    typeof response.text === "function"
-      ? response.text
-      : response.text,
+  reply: response.text,
 });
 
 return NextResponse.json({
