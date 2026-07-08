@@ -24,22 +24,29 @@ export async function POST(req: Request) {
 4.もっと柔らかく親しみやすい話し方で客観的ではなく運営側として話してください
 5.一人称は徳川ミュージックアカデミー
 
+
 【資料】
 ${knowledgeData}
 `;
 
     // 3. config の中に systemInstruction を入れて呼び出す
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: message,
-      config: {
-        systemInstruction: systemPrompt,
-      },
-    });
+   const response = await ai.models.generateContent({
+  model: "gemini-2.5-flash",
+  contents: message,
+  config: {
+    systemInstruction: systemPrompt,
+  },
+});
+
+console.log("Gemini response:", response);
+
+return NextResponse.json({
+  reply: response.text || "回答を取得できませんでした。",
+});
 
     return NextResponse.json({
-      reply: response.text,
-    });
+  reply: response.text || "回答を取得できませんでした。",
+});
   } catch (error) {
     console.error(error);
 

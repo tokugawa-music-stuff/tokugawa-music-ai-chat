@@ -107,9 +107,24 @@ const clearHistory = () => {
 
       const data = await response.json();
 
-      if (data.reply) {
-        setMessages((prev) => [...prev, { role: 'bot', text: data.reply }]);
-      } else {
+      console.log(data);
+
+     if (data.reply) {
+
+  const replyText =
+    typeof data.reply === 'string'
+      ? data.reply
+      : data.reply.text || data.reply.answer || JSON.stringify(data.reply);
+
+  setMessages((prev) => [
+    ...prev,
+    {
+      role: 'bot',
+      text: replyText
+    }
+  ]);
+
+}else {
         setMessages((prev) => [
           ...prev,
           { role: 'bot', text: '返答の取得に失敗しました。' },
