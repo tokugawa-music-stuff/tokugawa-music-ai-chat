@@ -107,8 +107,6 @@ const clearHistory = () => {
 
       const data = await response.json();
 
-      console.log(data);
-
      if (data.reply) {
 
   const replyText =
@@ -216,51 +214,23 @@ const clearHistory = () => {
              <ReactMarkdown
   remarkPlugins={[remarkGfm]}
   components={{
-    a: ({ href, children }) => (
-      <a
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="
-          text-[#12A182]
-          underline
-          font-semibold
-          hover:text-[#0e8269]
-          transition-colors
-        "
-      >
-        {children}
-      </a>
-    ),
-
-    p: ({ children }) => {
-      const text = String(children);
-
-      const urlRegex = /(https?:\/\/[^\s]+)/g;
-
-      const parts = text.split(urlRegex);
-
-      return (
-        <p>
-          {parts.map((part, i) =>
-            urlRegex.test(part) ? (
-              <a
-                key={i}
-                href={part}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[#12A182] underline font-semibold hover:text-[#0e8269]"
-              >
-                {part}
-              </a>
-            ) : (
-              part
-            )
-          )}
-        </p>
-      );
-    },
-  }}
+  a: ({ href, children }) => (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="
+        text-[#12A182]
+        underline
+        font-semibold
+        hover:text-[#0e8269]
+        transition-colors
+      "
+    >
+      {children}
+    </a>
+  ),
+}}
 >
   {msg.text}
 </ReactMarkdown>
