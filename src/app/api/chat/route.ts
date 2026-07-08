@@ -39,14 +39,21 @@ ${knowledgeData}
 });
 
 console.log("Gemini response:", response);
+console.log("response.text:", response.text);
+console.log("typeof response.text:", typeof response.text);
+
+return NextResponse.json({
+  reply:
+    typeof response.text === "function"
+      ? response.text
+      : response.text,
+});
 
 return NextResponse.json({
   reply: response.text || "回答を取得できませんでした。",
 });
 
-    return NextResponse.json({
-  reply: response.text || "回答を取得できませんでした。",
-});
+
   } catch (error) {
     console.error(error);
 
