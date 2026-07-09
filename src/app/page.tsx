@@ -45,6 +45,7 @@ const clearHistory = () => {
 
   // 一番下へスクロールするためのref
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
   messagesEndRef.current?.scrollIntoView({
@@ -56,6 +57,14 @@ const clearHistory = () => {
     JSON.stringify(messages)
   );
 }, [messages, isLoading]);
+
+useEffect(() => {
+  if (textareaRef.current) {
+    textareaRef.current.style.height = 'auto';
+    textareaRef.current.style.height =
+      `${textareaRef.current.scrollHeight}px`;
+  }
+}, [input]);
 
 
 
@@ -93,6 +102,10 @@ const clearHistory = () => {
     const userText = input;
     setInput('');
 
+    if (textareaRef.current) {
+  textareaRef.current.style.height = 'auto';
+}
+
     setMessages((prev) => [...prev, { role: 'user', text: userText }]);
     setIsLoading(true);
 
@@ -106,7 +119,7 @@ const clearHistory = () => {
       });
 
       const data = await response.json();
-
+console.log("API Response:", data);
      if (data.reply) {
 
   const replyText =
@@ -140,10 +153,10 @@ const clearHistory = () => {
   };
 
   return (
-    <div className="flex flex-col h-dvh bg-[#FFFBBA] text-slate-800">
+    <div className="flex flex-col min-h-dvh bg-[#FFFBBA] text-slate-800">
 
       {/* ヘッダー */}
-      <header className="bg-[#12A182] text-white px-4 py-3 shadow-sm flex items-center justify-between">
+      <header className="bg-[#12A182] text-white px-4 py-3 shadow-sm flex items-end justify-between">
 
   <h1 className="text-lg sm:text-xl md:text-2xl font-bold tracking-wide">
     徳川ミュージックアカデミー
@@ -269,17 +282,30 @@ const clearHistory = () => {
       </div>
 
       {/* 入力欄 */}
-      <div className="bg-[#12A182] px-3 py-4 sm:px-5">
+      <div className="
+  sticky
+  bottom-0
+  bg-[#12A182]
+  px-3
+  py-4
+  sm:px-5
+">
 
         <div className="max-w-5xl mx-auto">
 
-  <div className="flex items-center bg-white border-2 border-black rounded-full shadow-lg px-3 py-2">
+  <div className="flex items-end bg-white border-2 border-black rounded-3xl shadow-lg px-3 py-2">
 
-     <input
-        type="text"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+     <textarea
+       ref={textareaRef}
+  value={input}
+  
+  onChange={(e) => setInput(e.target.value)}
+        onKeyDown={(e) => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    handleSend();
+  }
+}}
         placeholder={
           isLoading
             ? '回答を待っています...'
@@ -287,18 +313,20 @@ const clearHistory = () => {
         }
         disabled={isLoading}
         className="
-          flex-1
-          bg-transparent
-          outline-none
-          px-4
-          py-2
-          text-sm
-          sm:text-base
-          text-slate-800
-          placeholder:text-slate-400
-          disabled:opacity-50
-        "
-      />
+    flex-1
+    bg-transparent
+    outline-none
+    px-4
+    py-2
+    text-sm
+    sm:text-base
+    text-slate-800
+    placeholder:text-slate-400
+    disabled:opacity-50
+    resize-none
+    max-h-40
+  "
+/>
 
 
       <button
