@@ -11,10 +11,14 @@ export default function Home() {
     input,
     setInput,
     isLoading,
+    cooldownSeconds,
     messagesEndRef,
     startNewChat,
     clearHistory,
     handleSend,
+    cancelSend,
+    retryLastMessage,
+    canRetry,
   } = useChatMessages();
 
   return (
@@ -27,12 +31,17 @@ export default function Home() {
         messages={messages}
         isLoading={isLoading}
         messagesEndRef={messagesEndRef}
+        onSelectQuestion={handleSend}
       />
       <ChatInput
         input={input}
         isLoading={isLoading}
+        cooldownSeconds={cooldownSeconds}
+        canRetry={canRetry}
         onInputChange={setInput}
         onSend={handleSend}
+        onCancel={cancelSend}
+        onRetry={retryLastMessage}
       />
     </div>
   );

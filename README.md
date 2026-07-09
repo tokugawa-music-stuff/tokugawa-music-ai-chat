@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 徳川ミュージックアカデミー チャットボット
 
-## Getting Started
+徳川ミュージックアカデミーの教室案内用チャットボットです。
+`knowledge.txt` の内容をもとに、レッスン、振替、クラス変更、休会・退会などの質問に回答します。
 
-First, run the development server:
+## 使用技術
+
+- Next.js
+- React
+- TypeScript
+- Tailwind CSS
+- Gemini API (`@google/genai`)
+
+## セットアップ
+
+依存パッケージをインストールします。
+
+```bash
+npm install
+```
+
+プロジェクト直下に `.env.local` を作成し、Gemini APIキーを設定します。
+
+```bash
+GEMINI_API_KEY=your_api_key_here
+```
+
+## 起動方法
+
+開発サーバーを起動します。
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+ブラウザで開きます。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```text
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 確認コマンド
 
-## Learn More
+コードの確認:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run lint
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+型チェック:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npx tsc --noEmit
+```
 
-## Deploy on Vercel
+本番ビルド:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run build
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 主なファイル
+
+- `src/app/page.tsx`: チャット画面の全体レイアウト
+- `src/components/`: ヘッダー、入力欄、メッセージ表示などのUI部品
+- `src/hooks/useChatMessages.ts`: 送信、履歴保存、キャンセル、再送信などのチャット処理
+- `src/app/api/chat/route.ts`: Gemini APIへの問い合わせ処理
+- `knowledge.txt`: チャットボットが回答に使う教室情報
+
+## 回答ルール
+
+チャットボットは `knowledge.txt` の内容をもとに回答します。
+資料に回答できる根拠がない場合は、次の案内を返すようにしています。
+
+```text
+大変申し訳ありませんがスクールチャットまたはお電話でお問い合わせください
+```
+
+## 注意事項
+
+- `.env.local` はGitHubにpushしないでください。
+- `knowledge.txt` を更新すると、チャットボットの回答内容も変わります。
+- 本番環境では `GEMINI_API_KEY` をデプロイ先の環境変数にも設定してください。

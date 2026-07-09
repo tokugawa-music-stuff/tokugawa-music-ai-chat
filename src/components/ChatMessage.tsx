@@ -29,7 +29,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
       <div
         className={`max-w-[90%] sm:max-w-[82%] md:max-w-[72%] rounded-2xl px-4 py-3 shadow-sm text-[15px] font-medium leading-6 whitespace-pre-wrap ${
           message.role === 'user'
-            ? 'bg-indigo-600 text-white rounded-tr-none'
+            ? 'bg-white text-black border border-slate-200 rounded-tr-none'
             : 'bg-white border border-slate-200 rounded-tl-none'
         }`}
       >
