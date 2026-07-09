@@ -27,7 +27,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
       )}
 
       <div
-        className={`max-w-[90%] sm:max-w-[82%] md:max-w-[72%] rounded-2xl px-4 py-2 shadow-sm text-[15px] font-medium leading-5 whitespace-pre-wrap ${
+        className={`max-w-[90%] sm:max-w-[82%] md:max-w-[72%] rounded-2xl px-4 py-2 shadow-sm text-[14px] sm:text-[15px] font-medium leading-[1.4] sm:leading-5 whitespace-pre-wrap ${
           message.role === 'user'
             ? 'bg-white text-black border border-slate-200 rounded-tr-none'
             : 'bg-white border border-slate-200 rounded-tl-none'

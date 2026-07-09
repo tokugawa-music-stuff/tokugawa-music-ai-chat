@@ -18,7 +18,7 @@ export function MessageList({
   onSelectQuestion,
 }: MessageListProps) {
   return (
-    <div className="flex-1 overflow-y-auto scroll-smooth px-3 py-4 sm:px-6 md:px-8 space-y-4 max-w-5xl w-full mx-auto">
+    <div className="flex-1 overflow-y-auto scroll-smooth px-3 py-4 sm:px-6 md:px-8 space-y-1 sm:space-y-3 max-w-5xl w-full mx-auto">
       {messages.length === 0 && (
         <EmptyChatState onSelectQuestion={onSelectQuestion} />
       )}
