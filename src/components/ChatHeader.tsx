@@ -1,3 +1,5 @@
+import { Plus, Trash2 } from 'lucide-react';
+
 type ChatHeaderProps = {
   onStartNewChat: () => void;
   onClearHistory: () => void;
@@ -8,18 +10,42 @@ export function ChatHeader({
   onClearHistory,
 }: ChatHeaderProps) {
   return (
-    <header className="bg-[#12A182] text-white px-4 py-3 shadow-sm flex items-end justify-between">
-      <h1 className="text-lg sm:text-xl md:text-2xl font-bold tracking-wide">
+    <header className="bg-[#12A182] text-white px-5 py-5 shadow-sm flex items-center justify-between min-h-[100px]">
+      <h1 className="m-0 text-lg sm:text-xl md:text-2xl font-bold tracking-wide leading-none">
         徳川ミュージックアカデミー
       </h1>
 
-      <div className="flex gap-3 text-sm">
-        <button onClick={onStartNewChat} className="hover:opacity-80">
-          ✨新しい会話
+      <div className="flex gap-2">
+        <button
+          onClick={onStartNewChat}
+          className="
+            flex items-center gap-1
+            bg-white/20
+            hover:bg-white/30
+            transition
+            rounded-full
+            px-3 py-2
+            text-sm font-semibold
+          "
+        >
+          <Plus size={18} strokeWidth={2.5} />
+          <span className="hidden sm:inline">新しい会話</span>
         </button>
 
-        <button onClick={onClearHistory} className="hover:opacity-80">
-          🗑削除
+        <button
+          onClick={onClearHistory}
+          className="
+            flex items-center gap-1
+            bg-white/20
+            hover:bg-red-500/80
+            transition
+            rounded-full
+            px-3 py-2
+            text-sm font-semibold
+          "
+        >
+          <Trash2 size={18} strokeWidth={2.5} />
+          <span className="hidden sm:inline">削除</span>
         </button>
       </div>
     </header>

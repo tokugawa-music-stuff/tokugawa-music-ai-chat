@@ -35,7 +35,7 @@ export function ChatInput({
   }, [input]);
 
   return (
-    <div className="sticky bottom-0 bg-[#12A182] px-3 py-4 sm:px-5">
+    <div className="sticky bottom-0 bg-[#12A182] px-3 py-6 sm:px-5">
       <div className="max-w-5xl mx-auto">
         {canRetry && (
           <div className="mb-2 flex justify-end">
