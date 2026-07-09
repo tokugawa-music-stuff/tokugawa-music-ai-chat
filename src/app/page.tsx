@@ -10,6 +10,12 @@ type Message = {
   text: string;
 };
 
+type Chat = {
+  id: string;
+  title: string;
+  messages: Message[];
+};
+
 export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
@@ -301,7 +307,12 @@ console.log("API Response:", data);
   
   onChange={(e) => setInput(e.target.value)}
         onKeyDown={(e) => {
-  if (e.key === 'Enter' && !e.shiftKey) {
+  if (
+    e.key === 'Enter' &&
+    !e.shiftKey &&
+    !e.nativeEvent.isComposing &&
+    e.keyCode !== 229
+  ) {
     e.preventDefault();
     handleSend();
   }
