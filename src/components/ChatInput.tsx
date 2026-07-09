@@ -50,7 +50,7 @@ export function ChatInput({
           </div>
         )}
 
-        <div className="flex items-end bg-white border-2 border-black rounded-3xl shadow-lg px-3 py-2">
+        <div className="relative flex items-end bg-white border-2 border-black rounded-3xl shadow-lg px-3 py-2">
           <textarea
             ref={textareaRef}
             value={input}
@@ -76,6 +76,7 @@ export function ChatInput({
             disabled={isLoading || isCoolingDown}
             className="
               flex-1
+              min-w-0
               bg-transparent
               outline-none
               px-4
@@ -95,6 +96,8 @@ export function ChatInput({
               type="button"
               onClick={onCancel}
               className="
+                relative
+                z-50
                 mr-2
                 w-10 h-10
                 sm:w-12 sm:h-12
@@ -117,6 +120,7 @@ export function ChatInput({
 
           <button
             onClick={onSend}
+            
             disabled={isLoading || isCoolingDown || !input.trim()}
             className="
               w-10 h-10

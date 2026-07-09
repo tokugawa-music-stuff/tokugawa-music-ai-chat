@@ -45,9 +45,19 @@ export const useChatMessages = () => {
   };
 
   const handleSend = async (presetMessage?: string) => {
-    const messageToSend = presetMessage ?? input;
+  const messageToSend =
+    typeof presetMessage === 'string'
+      ? presetMessage
+      : input;
 
-    if (!messageToSend.trim() || isLoading || cooldownSeconds > 0) return;
+  if (
+    typeof messageToSend !== 'string' ||
+    !messageToSend.trim() ||
+    isLoading ||
+    cooldownSeconds > 0
+  ) {
+    return;
+  }
 
     const userText = messageToSend;
     setInput('');
