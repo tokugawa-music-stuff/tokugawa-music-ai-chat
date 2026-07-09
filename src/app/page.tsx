@@ -22,17 +22,40 @@ export default function Home() {
   } = useChatMessages();
 
   return (
-    <div className="flex flex-col min-h-dvh bg-[#FFFBBA] text-slate-800">
+  <div className="relative flex flex-col min-h-dvh bg-[#FFFBBA] text-slate-800 overflow-hidden">
+
+   {/* 背景キャラクター */}
+<div className="absolute inset-0 pointer-events-none select-none z-0">
+  <img
+    src="/mascot.png"
+    alt=""
+    className="
+      absolute
+      top-[70%]
+      left-[48%]
+      -translate-x-1/2
+      -translate-y-1/2
+      w-[70vw]
+      max-w-[700px]
+      opacity-[1]
+    "
+  />
+</div>
+
+    {/* チャット本体 */}
+    <div className="relative z-10 flex flex-col min-h-dvh">
       <ChatHeader
         onStartNewChat={startNewChat}
         onClearHistory={clearHistory}
       />
+
       <MessageList
         messages={messages}
         isLoading={isLoading}
         messagesEndRef={messagesEndRef}
         onSelectQuestion={handleSend}
       />
+
       <ChatInput
         input={input}
         isLoading={isLoading}
@@ -44,5 +67,5 @@ export default function Home() {
         onRetry={retryLastMessage}
       />
     </div>
-  );
-}
+  </div>
+)}
