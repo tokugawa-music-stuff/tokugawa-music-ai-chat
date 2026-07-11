@@ -10,24 +10,40 @@ type ChatMessageProps = {
 
 export function ChatMessage({ message }: ChatMessageProps) {
   const [feedback, setFeedback] = useState<'good' | 'bad' | null>(null);
+  const [feedbackSent, setFeedbackSent] = useState(false);
+  const [feedbackError, setFeedbackError] = useState(false);
 
     const sendFeedback = async (type: 'good' | 'bad') => {
-    try {
-      await fetch('/api/feedback', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-         question: message.question ?? '',
-         answer: message.text,
+  try {
+    setFeedbackError(false);
+
+    const res = await fetch('/api/feedback', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        question: message.question ?? '',
+        answer: message.text,
         feedback: type,
       }),
-      });
-    } catch (error) {
-      console.error('Feedback送信エラー:', error);
+    });
+
+    if (!res.ok) {
+      throw new Error(`送信失敗: ${res.status}`);
     }
-  };
+
+    // 送信成功した時だけ固定
+    setFeedback(type);
+    setFeedbackSent(true);
+
+    console.log('Feedback送信成功');
+
+  } catch (error) {
+    console.error('Feedback送信エラー:', error);
+    setFeedbackError(true);
+  }
+};
   
   return (
     <div
@@ -84,12 +100,11 @@ export function ChatMessage({ message }: ChatMessageProps) {
     <div className="flex gap-2 flex-wrap">
       <button
         onClick={() => {
-        if (!feedback) {
-        setFeedback('good');
-        sendFeedback('good');
-       }
-      }}
-        disabled={feedback !== null}
+  if (!feedbackSent) {
+    sendFeedback('good');
+  }
+}}
+        disabled={feedbackSent}
         className={`
           px-3 py-1.5
           rounded-full
@@ -108,12 +123,11 @@ export function ChatMessage({ message }: ChatMessageProps) {
 
       <button
         onClick={() => {
-        if (!feedback) {
-         setFeedback('bad');
-         sendFeedback('bad');
-       }
-      }}
-        disabled={feedback !== null}
+  if (!feedbackSent) {
+    sendFeedback('bad');
+  }
+}}
+        disabled={feedbackSent}
         className={`
           px-3 py-1.5
           rounded-full
@@ -136,6 +150,11 @@ export function ChatMessage({ message }: ChatMessageProps) {
         ✓ ご回答ありがとうございました！
       </p>
     )}
+    {feedbackError && (
+  <p className="mt-2 text-xs text-red-500">
+    ⚠ 送信できませんでした。もう一度お試しください。
+  </p>
+)}
   </div>
 )}
       </div>
