@@ -87,13 +87,14 @@ export const useChatMessages = () => {
             ? data.reply
             : data.reply.text || data.reply.answer || JSON.stringify(data.reply);
 
-        setMessages((prev) => [
-          ...prev,
-          {
-            role: 'bot',
-            text: replyText,
-          },
-        ]);
+       setMessages((prev) => [
+  ...prev,
+     {
+      role: 'bot',
+      text: replyText,
+      question: userText,
+     },
+    ]);
       } else {
         setMessages((prev) => [
           ...prev,

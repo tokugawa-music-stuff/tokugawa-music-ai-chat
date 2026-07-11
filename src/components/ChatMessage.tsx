@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -8,6 +9,26 @@ type ChatMessageProps = {
 };
 
 export function ChatMessage({ message }: ChatMessageProps) {
+  const [feedback, setFeedback] = useState<'good' | 'bad' | null>(null);
+
+    const sendFeedback = async (type: 'good' | 'bad') => {
+    try {
+      await fetch('/api/feedback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+         question: message.question ?? '',
+         answer: message.text,
+        feedback: type,
+      }),
+      });
+    } catch (error) {
+      console.error('Feedback送信エラー:', error);
+    }
+  };
+  
   return (
     <div
       className={`flex items-end gap-2 ${
@@ -57,6 +78,66 @@ export function ChatMessage({ message }: ChatMessageProps) {
         >
           {message.text}
         </ReactMarkdown>
+        {/* AI回答のみ評価ボタン表示 */}
+{message.role === 'bot' && (
+  <div className="mt-3">
+    <div className="flex gap-2 flex-wrap">
+      <button
+        onClick={() => {
+        if (!feedback) {
+        setFeedback('good');
+        sendFeedback('good');
+       }
+      }}
+        disabled={feedback !== null}
+        className={`
+          px-3 py-1.5
+          rounded-full
+          text-xs sm:text-sm
+          transition
+          ${
+            feedback === 'good'
+              ? 'bg-[#12A182] text-white border border-[#12A182]'
+              : 'bg-white border border-slate-300 hover:bg-slate-100'
+          }
+          ${feedback !== null ? 'cursor-default opacity-80' : ''}
+        `}
+      >
+        👍 役に立った
+      </button>
+
+      <button
+        onClick={() => {
+        if (!feedback) {
+         setFeedback('bad');
+         sendFeedback('bad');
+       }
+      }}
+        disabled={feedback !== null}
+        className={`
+          px-3 py-1.5
+          rounded-full
+          text-xs sm:text-sm
+          transition
+          ${
+            feedback === 'bad'
+              ? 'bg-red-500 text-white border border-red-500'
+              : 'bg-white border border-slate-300 hover:bg-slate-100'
+          }
+          ${feedback !== null ? 'cursor-default opacity-80' : ''}
+        `}
+      >
+        👎 解決しなかった
+      </button>
+    </div>
+
+    {feedback && (
+      <p className="mt-2 text-xs text-slate-500">
+        ✓ ご回答ありがとうございました！
+      </p>
+    )}
+  </div>
+)}
       </div>
     </div>
   );
