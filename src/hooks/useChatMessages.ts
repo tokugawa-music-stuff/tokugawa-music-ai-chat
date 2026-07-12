@@ -148,7 +148,7 @@ export const useChatMessages = () => {
   return;
 }
 
-console.error(error);
+
 
       console.error(error);
        setCanRetryMessage(true);
