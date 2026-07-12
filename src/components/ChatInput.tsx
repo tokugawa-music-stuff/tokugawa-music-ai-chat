@@ -36,8 +36,6 @@ export function ChatInput({
 
   return (
 <div className="
-  sticky
-  bottom-0
   bg-[#12A182]
   px-3
   py-4

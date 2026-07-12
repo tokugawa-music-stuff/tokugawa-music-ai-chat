@@ -18,7 +18,7 @@ export function MessageList({
   onSelectQuestion,
 }: MessageListProps) {
   return (
-    <div className="
+<div className="
   flex-1
   overflow-y-auto
   scroll-smooth
