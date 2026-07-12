@@ -36,16 +36,13 @@ export function ChatInput({
 
   return (
 <div className="
-  fixed
+  sticky
   bottom-0
-  left-0
-  right-0
-  z-50
   bg-[#12A182]
   px-3
   py-4
   sm:px-5
-  pb-[calc(env(safe-area-inset-bottom)+16px)]
+  pb-[env(safe-area-inset-bottom)]
 ">
       <div className="max-w-5xl mx-auto">
         {canRetry && (

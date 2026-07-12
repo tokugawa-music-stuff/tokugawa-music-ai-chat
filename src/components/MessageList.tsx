@@ -24,9 +24,6 @@ export function MessageList({
   scroll-smooth
   px-3
   py-4
-  pb-36
-  sm:pb-40
-  md:pb-44
   sm:px-6
   md:px-8
   space-y-1
