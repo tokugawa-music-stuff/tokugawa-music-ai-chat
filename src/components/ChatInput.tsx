@@ -35,13 +35,16 @@ export function ChatInput({
   }, [input]);
 
   return (
-<div className="
-  bg-[#12A182]
-  px-3
-  py-4
-  sm:px-5
-  pb-[env(safe-area-inset-bottom)]
-">
+<div
+  className="
+    bg-[#12A182]
+    px-3
+    py-4
+    sm:px-5
+    pb-[calc(env(safe-area-inset-bottom)+16px)]
+
+  "
+>
       <div className="max-w-5xl mx-auto">
         {canRetry && (
           <div className="mb-2 flex justify-end">
@@ -56,7 +59,19 @@ export function ChatInput({
           </div>
         )}
 
-        <div className="relative flex items-end bg-white border-2 border-black rounded-3xl shadow-lg px-3 py-2">
+       <div className="
+  relative
+  flex
+  items-end
+  bg-white
+  border-2
+  border-black
+  rounded-3xl
+  shadow-lg
+  px-3
+  py-2
+  mb-3
+">
           <textarea
             ref={textareaRef}
             value={input}
