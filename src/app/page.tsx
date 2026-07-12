@@ -44,18 +44,20 @@ export default function Home() {
 </div>
 
     {/* チャット本体 */}
-    <div className="relative z-10 flex flex-col min-h-dvh">
+    <div className="relative z-10 flex flex-col h-dvh overflow-hidden">
       <ChatHeader
         onStartNewChat={startNewChat}
         onClearHistory={clearHistory}
       />
 
-      <MessageList
-        messages={messages}
-        isLoading={isLoading}
-        messagesEndRef={messagesEndRef}
-        onSelectQuestion={(question) => handleSend(question)}
-      />
+    <div className="flex-1 overflow-y-auto pb-32 sm:pb-36">
+  <MessageList
+    messages={messages}
+    isLoading={isLoading}
+    messagesEndRef={messagesEndRef}
+    onSelectQuestion={(question) => handleSend(question)}
+  />
+</div>
 
       <ChatInput
         input={input}
