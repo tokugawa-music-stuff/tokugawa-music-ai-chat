@@ -5,6 +5,7 @@ import { ChatInput } from '@/components/ChatInput';
 import { MessageList } from '@/components/MessageList';
 import { useChatMessages } from '@/hooks/useChatMessages';
 
+
 export default function Home() {
   const {
     messages,
@@ -53,7 +54,7 @@ export default function Home() {
         messages={messages}
         isLoading={isLoading}
         messagesEndRef={messagesEndRef}
-        onSelectQuestion={handleSend}
+        onSelectQuestion={(question) => handleSend(question)}
       />
 
       <ChatInput

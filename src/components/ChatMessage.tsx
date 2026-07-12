@@ -95,7 +95,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
           {message.text}
         </ReactMarkdown>
         {/* AI回答のみ評価ボタン表示 */}
-{message.role === 'bot' && (
+{message.role === 'bot' && message.feedbackEnabled && (
   <div className="mt-3">
     <div className="flex gap-2 flex-wrap">
       <button

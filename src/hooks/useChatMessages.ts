@@ -24,6 +24,8 @@ export const useChatMessages = () => {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [lastSentMessage, setLastSentMessage] = useState('');
+  const [canRetryMessage, setCanRetryMessage] = useState(false);
+  const [lastErrorIndex, setLastErrorIndex] = useState<number | null>(null);
   const [cooldownSeconds, setCooldownSeconds] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const hasLoadedHistoryRef = useRef(false);
@@ -32,6 +34,9 @@ export const useChatMessages = () => {
   const startNewChat = () => {
     setMessages([]);
     setLastSentMessage('');
+    setCanRetryMessage(false);
+  setLastErrorIndex(null);
+
   };
 
   const clearHistory = () => {
@@ -41,34 +46,47 @@ export const useChatMessages = () => {
       localStorage.removeItem(CHAT_HISTORY_KEY);
       setMessages([]);
       setLastSentMessage('');
+      setCanRetryMessage(false);
+      setLastErrorIndex(null);
     }
   };
 
-  const handleSend = async (presetMessage?: string) => {
+  const handleSend = async (
+  presetMessage?: string,
+  isRetry = false
+) => {
+
   const messageToSend =
     typeof presetMessage === 'string'
       ? presetMessage
       : input;
 
-  if (
+   if (
     typeof messageToSend !== 'string' ||
     !messageToSend.trim() ||
     isLoading ||
-    cooldownSeconds > 0
-  ) {
-    return;
-  }
+    (!isRetry && cooldownSeconds > 0)
+) {
+  return;
+}
 
     const userText = messageToSend;
-    setInput('');
-    setLastSentMessage(userText);
-    setCooldownSeconds(SEND_COOLDOWN_SECONDS);
+     setInput('');
+     setLastSentMessage(userText);
+     setCanRetryMessage(false);
+     setCooldownSeconds(SEND_COOLDOWN_SECONDS);
 
-    setMessages((prev) => [...prev, { role: 'user', text: userText }]);
+    if (!isRetry) {
+  setMessages((prev) => [
+    ...prev,
+    { role: 'user', text: userText },
+  ]);
+}
     setIsLoading(true);
     abortControllerRef.current = new AbortController();
 
     try {
+
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: {
@@ -78,21 +96,28 @@ export const useChatMessages = () => {
         signal: abortControllerRef.current.signal,
       });
 
+      if (!response.ok) {
+  throw new Error(`API Error: ${response.status}`);
+}
+
       const data = await response.json();
       console.log('API Response:', data);
 
-      if (data.reply) {
+     if (data.success === true && data.reply) {
+        setCanRetryMessage(false);
+
         const replyText =
           typeof data.reply === 'string'
             ? data.reply
             : data.reply.text || data.reply.answer || JSON.stringify(data.reply);
 
        setMessages((prev) => [
-  ...prev,
+  　　　　...prev,
      {
       role: 'bot',
       text: replyText,
       question: userText,
+      feedbackEnabled: true,
      },
     ]);
       } else {
@@ -100,27 +125,48 @@ export const useChatMessages = () => {
           ...prev,
           {
             role: 'bot',
-            text: '大変申し訳ありません。時間をおいて再度お試しいただくか、スクールチャットまたはお電話でお問い合わせください。',
+            text: 
+             data.reply ||
+             '大変申し訳ありません。時間をおいて再度お試しいただくか、スクールチャットまたはお電話でお問い合わせください。',
+            feedbackEnabled: false,
           },
         ]);
       }
     } catch (error) {
-      if (error instanceof DOMException && error.name === 'AbortError') {
-        setMessages((prev) => [
-          ...prev,
-          { role: 'bot', text: '送信をキャンセルしました。' },
-        ]);
-        return;
-      }
+     if (error instanceof DOMException && error.name === 'AbortError') {
+  setCanRetryMessage(false);
+
+  setMessages((prev) => [
+    ...prev,
+    {
+      role: 'bot',
+      text: '送信をキャンセルしました。',
+      feedbackEnabled: false,
+    },
+  ]);
+
+  return;
+}
+
+console.error(error);
 
       console.error(error);
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: 'bot',
-          text: '大変申し訳ありません。時間をおいて再度お試しいただくか、スクールチャットまたはお電話でお問い合わせください。',
-        },
-      ]);
+       setCanRetryMessage(true);
+
+   setMessages((prev) => {
+  const newMessages = [
+    ...prev,
+    {
+      role: 'bot' as const,
+      text: '回答の取得に失敗しました。再送信をお試しください。',
+      feedbackEnabled: false,
+    },
+  ];
+
+  setLastErrorIndex(newMessages.length - 1);
+
+  return newMessages;
+});
     } finally {
       abortControllerRef.current = null;
       setIsLoading(false);
@@ -132,11 +178,18 @@ export const useChatMessages = () => {
   };
 
   const retryLastMessage = () => {
-    if (!lastSentMessage || isLoading || cooldownSeconds > 0) return;
+  if (!lastSentMessage || isLoading) return;
 
-    void handleSend(lastSentMessage);
-  };
+  if (lastErrorIndex !== null) {
+    setMessages((prev) =>
+      prev.filter((_, index) => index !== lastErrorIndex)
+    );
 
+    setLastErrorIndex(null);
+  }
+
+  void handleSend(lastSentMessage, true);
+};
   useEffect(() => {
     queueMicrotask(() => {
       const savedMessages = loadSavedMessages();
@@ -155,8 +208,13 @@ export const useChatMessages = () => {
     });
 
     if (!hasLoadedHistoryRef.current) return;
+　   const history = messages.slice(-100);
 
-    localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(messages));
+　　　localStorage.setItem(
+     CHAT_HISTORY_KEY,
+     JSON.stringify(history)
+);
+
   }, [messages, isLoading]);
 
   useEffect(() => {
@@ -181,6 +239,6 @@ export const useChatMessages = () => {
     handleSend,
     cancelSend,
     retryLastMessage,
-    canRetry: Boolean(lastSentMessage) && !isLoading && cooldownSeconds === 0,
+    canRetry: canRetryMessage && !isLoading,
   };
 };
