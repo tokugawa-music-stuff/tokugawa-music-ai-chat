@@ -69,7 +69,7 @@ export function ChatInput({
   shadow-lg
   px-3
   py-2
-  mb-3
+  mb-1
 ">
           <textarea
             ref={textareaRef}
