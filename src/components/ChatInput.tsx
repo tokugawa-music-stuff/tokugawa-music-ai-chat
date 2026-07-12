@@ -41,7 +41,6 @@ export function ChatInput({
     px-3
     py-4
     sm:px-5
-    pb-[calc(env(safe-area-inset-bottom)+16px)]
 
   "
 >
