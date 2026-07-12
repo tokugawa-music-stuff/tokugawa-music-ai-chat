@@ -44,7 +44,7 @@ export default function Home() {
 </div>
 
     {/* チャット本体 */}
-    <div className="relative z-10 flex flex-col min-h-dvh">
+    <div className="relative z-10 flex flex-col h-dvh">
       <ChatHeader
         onStartNewChat={startNewChat}
         onClearHistory={clearHistory}
