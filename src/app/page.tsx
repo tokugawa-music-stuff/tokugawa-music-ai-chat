@@ -23,7 +23,7 @@ export default function Home() {
   } = useChatMessages();
 
   return (
-  <div className="relative flex flex-col min-h-dvh bg-[#FFFBBA] text-slate-800 overflow-hidden">
+  <div className="relative flex flex-col h-dvh bg-[#FFFBBA] text-slate-800 overflow-hidden">
 
    {/* 背景キャラクター */}
 <div className="absolute inset-0 pointer-events-none select-none z-0">
