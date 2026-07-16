@@ -4,3 +4,10 @@ export type Message = {
   question?: string;
   feedbackEnabled?: boolean;
 };
+
+export type ChatSession = {
+  id: string;
+  title: string;
+  createdAt: string;
+  messages: Message[];
+};
